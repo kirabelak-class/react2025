@@ -7,7 +7,9 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 
 //axios
 
-axios.get('https://jsonplaceholder.typicode.com/posts')
+axios.get('https://jsonplaceholder.typicode.com/posts',{
+      headers: { Accept: "application/xml" }
+})
   .then(response => console.log(response.data))
   .catch(error => console.log(error))
 
@@ -21,6 +23,10 @@ const fetchPosts = async () => {
 
 fetchPosts()
 
+const fetchPostAxios=async()=>{
+  const res= await axios.get('https://jsonplaceholder.typicode.com/posts')
+  console.log(res)
+}
 
 //pokedex
 
