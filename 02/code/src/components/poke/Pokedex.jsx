@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import SearchBar from "./SearchBar";
 import PokemonList from "./PokemonList";
 import Pagination from "./Paginations";
@@ -12,99 +13,80 @@ import {
 const PAGE_SIZE = 20;
 
 export default function Pokedex() {
-	const [mode, setMode] = useState("list");
+	// const [mode, setMode] = useState("list");
 	const [page, setPage] = useState(1);
+	const [term, setTerm] = useState("");
 
-	const [items, setItems] = useState([]);
-	const [count, setCount] = useState(0);
-	const [selected, setSelected] = useState(null);
+	const {
+		data: listData,
+		error: listError,
+		isLoading: listLoading,
+		isError: listIsError,
+		isFetching: listIsFetching,
+	} = useQuery({
+		queryKey: ["pokemon", "list", page],
+		queryFn: async () => {
+			const offset = (page - 1) * PAGE_SIZE;
+			const data = await fetchPokemonPage(PAGE_SIZE, offset);
+			const detailed = await fetchPokemonListDetails(data.results);
+			return { count: data.count || 0, items: detailed };
+		},
+		keepPreviousData: true,
+		staleTime: 30_000,
+		enabled: term.trim() === "",
+	});
 
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const {
+		data: detailData,
+		error: detailError,
+		isLoading: detailLoading,
+		isError: detailIsError,
+		isFetching: detailIsFetching,
+	} = useQuery({
+		queryKey: ["pokemon", "detail", term.trim().toLowerCase()],
+		queryFn: () => fetchPokemonByNameOrId(term),
+		enabled: term.trim() !== "", // solo corre si HAY búsqueda
+		staleTime: 180_000,
+	});
 
-	const cacheRef = useRef(new Map());
+	const totalPages = useMemo(() => {
+		if (!listData?.count) return 1;
+		return Math.max(1, Math.ceil(listData.count / PAGE_SIZE));
+	}, [listData?.count]);
 
-	useEffect(() => {
-		if (mode !== "list") return;
-		const offset = (page - 1) * PAGE_SIZE;
+	const handleSearch = (t) => {
+		const next = String(t || "")
+			.trim()
+			.toLowerCase();
+		setTerm(next);
+	};
 
-		(async () => {
-			try {
-				setLoading(true);
-				setError(null);
-				const data = await fetchPokemonPage(PAGE_SIZE, offset);
-				setCount(data.count || 0);
-				const detailed = await fetchPokemonListDetails(data.results);
-				setItems(detailed);
-			} catch (error) {
-				setError(error.message || "Error al cargar listado");
-			} finally {
-				setLoading(false);
-			}
-		})();
-	}, [mode, page]);
-
-	async function handleSearch(term) {
-		const key = String(term).trim().toLowerCase();
-		if (!key) {
-			setSelected(null);
-			setMode("list");
-			setError(null);
-			return;
-		}
-		if (cacheRef.current.has(key)) {
-			setSelected(cacheRef.current.get(key));
-			setMode("detail");
-			setError(null);
-			return;
-		}
-		try {
-			setLoading(true);
-			setError(null);
-			const p = await fetchPokemonByNameOrId(key);
-			cacheRef.current.set(key, p);
-			cacheRef.current.set(String(p.id), p);
-			setSelected(p);
-			setMode("detail");
-		} catch (error) {
-			setSelected(null);
-			setMode("detail");
-			setError(error.message || "No se pudo encontrar el Poke");
-		} finally {
-			setLoading(false);
-		}
-	}
-
-	const totalPages = useMemo(
-		() => Math.max(1, Math.ceil(count / PAGE_SIZE)),
-		[count]
-	);
+    const isListmode=term.trim()===""
+    const loading= isListmode? listLoading : detailLoading;
+    const error= isListmode ? listError : detailError;
+    const isError=isListmode? listIsError: detailIsError;
+    const isFetching=isListmode? listIsFetching:detailIsFetching;
 
 	return (
 		<main style={{ maxWidth: 980, margin: "24px auto", padding: "0 16px" }}>
-			<h1>Pokedex</h1>
+			<h1>Pokedex "react query"</h1>
+            {isFetching && <small style={{opacity:0.7}}>Actualizando...</small>}
 			<SearchBar onSearch={handleSearch} onClear={() => handleSearch("")} />
 
 			{loading && <Loader />}
-			{error && (
+			{isError && (
 				<ErrorState
-					message={error}
-					onRetry={() => {
-						if (mode === "list") {
-							setPage((p) => p);
-						} else {
-							setError(null);
-						}
-					}}
+					message={error?.message}
+					onRetry={null}
 				/>
 			)}
 
-			{!loading && !error && mode === "list" && (
+			{!loading && !isError && isListmode && (
 				<>
-					{items.length === 0 ? (
+					{!listData?.items?.length ? (
 						<EmptyState title="Sin datos" helper="Intenta recargar" />
 					) : (
-						<PokemonList list={items} />
+						<PokemonList list={listData.items} />
 					)}
 
 					<Pagination
@@ -114,28 +96,28 @@ export default function Pokedex() {
 						onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
 					/>
 					<p style={{ marginTop: 8, fontSize: 12 }}>
-						Mostrando {items.length} de {count} — página {page}/{totalPages}
+            Mostrando {listData?.items?.length ?? 0} de {listData?.count ?? 0} — página {page}/{totalPages}
 					</p>
 				</>
 			)}
 
-			{!loading &&
-				!error &&
-				mode === "detail" &&
-				(selected ? (
+			{!loading && !isError && !isListmode &&
+				(detailData ? (
 					<section style={{ marginTop: 12 }}>
-						<PokemonList list={[selected]} />
+						<PokemonList list={[detailData]} />
 						<button
 							style={{ marginTop: 12 }}
-							onClick={() => {
-								setMode("list");
-								setError(null);
-							}}
+							onClick={() => handleSearch("")}
 						>
 							← Volver al listado
 						</button>
 					</section>
-				) : <EmptyState title="Pokemon no encontrado" helper="Revise el nombre o id"/>)}
+				) : (
+					<EmptyState
+						title="Pokemon no encontrado"
+						helper="Revise el nombre o id"
+					/>
+				))}
 		</main>
 	);
 }
