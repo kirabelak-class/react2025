@@ -7,8 +7,9 @@ import './App.css'
 import Pokedex from './components/poke/Pokedex'
 import {QueryClient,QueryClientProvider} from "@tanstack/react-query"
 import Tail from './components/Tail'
-import Title from './components/bit/Card'
+import Title from './components/bit/Title'
 import Select from './components/bit/Select'
+import Card from './components/bit/Card'
 const client = new QueryClient({
   defaultOptions:{
     queries:{
@@ -73,6 +74,8 @@ function App() {
      <Title as="h2" size="md" align="left" className="mt-4">Sección</Title>
      <Select options={['Easy','Normal','Hard']} value={level} onChange={e=>setLevel(e.target.value)} />
       <button onClick={handleToast}>picar</button>
+      {/* <Card title="Profile" footer={<Button>OK</Button>}><p>Contenido</p></Card> */}
+      <Card variant="primary" size="lg" interactive>...</Card>
     </QueryClientProvider>
   )
 }
