@@ -53,3 +53,37 @@ export default function UsersQuery() {
 
     
 }
+
+
+import { useEffect, useState } from "react";
+
+export default function Products() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [adding, setAdding] = useState(false);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data);
+      setLoading(false);
+    }
+    fetchProducts();
+  }, []); 
+  	const addproduct=async()=>{
+		setAdding(true)
+		  const newProduct = { name: "Nuevo producto", price: 200 };
+    	await fetch("/api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProduct),
+    });
+    setAdding(false);
+	const res = await fetch("/api/products");
+      const data = await res.json();
+	  setProducts(data)
+	}
+	
+}
