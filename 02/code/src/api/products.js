@@ -39,7 +39,7 @@ export async function addProduct(product) {
 	return res.json();
 }
 
-export async function delteProduct(id) {
+export async function deleteProduct(id) {
     const res= await fetch(`${Base}/products/${id}`, { method: "DELETE" });
     if(!res.ok) throw new Error("Error al eliminar el producto")
     return res.json()

@@ -56,7 +56,61 @@ export default function Catalog() {
         {products.isFetching && <span className="text-sm text-zinc-500">Actualizando…</span>}
       </header>
 
-   
+      {/* Controles */}
+      <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+        <SearchBar onSearch={(term) => { setQ(term); setPage(1); }} />
+        <div className="flex gap-2">
+          {cats.isLoading ? (
+            <div className="text-sm text-zinc-500">Cargando categorías…</div>
+          ) : cats.isError ? (
+            <div className="text-sm text-red-600">No se cargaron categorias</div>
+          ) : (
+            <CategorySelect
+              categories={Array.isArray(cats.data) ? cats.data : []}
+              value={category}
+              onChange={(v) => { setCategory(v); setPage(1); }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Form crear */}
+      <ProductForm onCreate={(payload) => createMutation.mutate(payload)} />
+
+      {/* Listado */}
+      {products.isLoading && <Spinner label="Cargando productos..." />}
+      {products.isError && (
+        <ErrorState
+          message={products.error?.message || "Error al cargar"}
+          onRetry={() => qc.invalidateQueries({ queryKey: ["products"] })}
+        />
+      )}
+
+      {!products.isLoading && !products.isError && (
+        <>
+          {products.data?.products?.length ? (
+            <>
+              <ProductGrid
+                products={products.data.products}
+                onDelete={(id) => deleteMutation.mutate(id)}
+              />
+              <div className="pt-4">
+                <Pagination
+                  page={page}
+                  totalPages={totalPages}
+                  onPrev={() => setPage((p) => Math.max(1, p - 1))}
+                  onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+                />
+                <p className="text-xs text-zinc-500 mt-2">
+                  Mostrando {products.data.products.length} de {products.data.total} (página {page}/{totalPages})
+                </p>
+              </div>
+            </>
+          ) : (
+            <Empty title="Sin productos" helper="Prueba otra búsqueda o categoría." />
+          )}
+        </>
+      )}
     </main>
   );
 }
