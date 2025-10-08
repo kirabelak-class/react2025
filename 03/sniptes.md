@@ -12,3 +12,10 @@ createRoot(document.getElementById("root")).render(
     <App />
   </BrowserRouter>
 );
+
+
+https://thesimpsonsapi.com/api
+
+
+/api/characters
+/api/characters/:id
