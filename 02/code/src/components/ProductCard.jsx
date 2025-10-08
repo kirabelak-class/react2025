@@ -22,8 +22,8 @@ export default function ProductCard ({product, onDelete}){
                 </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-                <Button className="bg-red-600 hover:bg-red-800" onClick={()=>onDelete}>
-                    Eliminar
+            <Button className="bg-red-600 hover:bg-red-700" onClick={() => onDelete(product.id)}>
+            Eliminar
                 </Button>
             </CardFooter>
         </Card>
