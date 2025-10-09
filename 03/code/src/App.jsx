@@ -7,28 +7,21 @@ import Blog from "./routes/Blog";
 import Post from "./routes/Posts";
 import StickyCountdown from "./components/StickyCountdown";
 import CreatePost from "./routes/CreatePost";
+import Characters from "./routes/Characters"
+import CharacterDetail from "./routes/CharacterDetail"
+import { ThemeProvider } from "./contex/ThemeContext";
+import ThemeToggle from "./components/ThemeToggle";
+import ThemedCard from "./components/ThemedCard";
 function App() {
 	return (
-		<>
-			{/* <StickyCountdown/> */}
-			<h1>Mini Sitio</h1>
-			<nav>
-				<Link to="/">Inicio</Link>
-				<Link to="/about">Sobre nosotros</Link>
-				<Link to="/user/43">Perfil</Link>
-				<Link to="/blog">Blog</Link>
-			</nav>
-
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/about" element={<About />} />
-				<Route path="/user/:id" element={<User />} />
-				<Route path="/blog" element={<Blog />}>
-					<Route path=":id" element={<Post />}/>
-					<Route path="nuevo" element={<CreatePost />} />
-				</Route>
-			</Routes>
-		</>
+		<ThemeProvider>
+      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 flex flex-col items-center justify-center gap-6">
+        <h1>Contexto de tema</h1>
+        <ThemeToggle/>
+        <ThemedCard/>
+      </main>
+    </ThemeProvider>
+		
 	);
 }
 
