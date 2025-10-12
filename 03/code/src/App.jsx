@@ -7,21 +7,38 @@ import Blog from "./routes/Blog";
 import Post from "./routes/Posts";
 import StickyCountdown from "./components/StickyCountdown";
 import CreatePost from "./routes/CreatePost";
-import Characters from "./routes/Characters"
-import CharacterDetail from "./routes/CharacterDetail"
+import Characters from "./routes/Characters";
+import CharacterDetail from "./routes/CharacterDetail";
 import { ThemeProvider } from "./contex/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
 import ThemedCard from "./components/ThemedCard";
+import { AuthProvider } from "./contex/AuthContext";
+import UserPanel from "./components/UserPanel";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./components/Dashboard";
 function App() {
 	return (
-		<ThemeProvider>
-      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 flex flex-col items-center justify-center gap-6">
-        <h1>Contexto de tema</h1>
-        <ThemeToggle/>
-        <ThemedCard/>
-      </main>
-    </ThemeProvider>
-		
+		<AuthProvider>
+			<ThemeProvider>
+				<main className="min-h-screen bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 flex flex-col items-center justify-center gap-6">
+					<h1>Contexto de tema</h1>
+					<ThemeToggle />
+					{/* <ThemedCard /> */}
+					<UserPanel />
+          <Link to="/dashboard">dash</Link>
+				</main>
+				<Routes>
+					<Route
+						path="/dashboard"
+						element={
+							<PrivateRoute>
+								<Dashboard />
+							</PrivateRoute>
+						}
+					/>
+				</Routes>
+			</ThemeProvider>
+		</AuthProvider>
 	);
 }
 

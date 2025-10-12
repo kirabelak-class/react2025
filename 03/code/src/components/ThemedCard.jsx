@@ -1,5 +1,5 @@
 import { useTheme } from "../contex/ThemeContext";
-
+import Button from "./Button"
 export default function ThemedCard() {
 	const { theme } = useTheme();
 	return (
@@ -15,7 +15,10 @@ export default function ThemedCard() {
       `}
 		>
 			<h2 className="text-2xl font-bold mb-2"> Tarjeta de ejemplo</h2>
-            <p className="mt-3 text-xs italic text-sky-500">Tema actual: {theme.toUpperCase()}</p>
+			<p className="mt-3 text-xs italic text-sky-500">
+				Tema actual: {theme.toUpperCase()}
+			</p>
+			<Button>Hijo</Button>
 		</div>
 	);
 }
