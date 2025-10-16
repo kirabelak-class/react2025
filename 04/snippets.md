@@ -7,3 +7,14 @@ const [value, setValue] = useState("")
     phone: "",
     address: ""
   });
+
+
+curl --location 'https://fakestoreapi.com/products' \
+--header 'Content-Type: application/json' \
+--data '{
+          "title": "result.output.title",
+          "price": 20,
+          "description": "result.output.description",
+          "image": "result.output.image",
+          "category": "result.output.category"
+        }'
