@@ -18,6 +18,7 @@ const RegisterSchema = v.pipe(
 			v.regex(/[0-9]/, "Debe tener al menos un número")
 		),
 		confirm: v.string(),
+		terms: v.literal(true, "Debes aceptar los términos"),
 	}),
 	v.forward(
 		v.check((d) => d.password === d.confirm, "Las contraseñas no coinciden"),
@@ -38,6 +39,7 @@ export default function Register() {
 		email: "",
 		password: "",
 		confirm: "",
+		terms: false,
 	});
 	const [errors, setErrors] = useState({});
 	const [loading, setLoading] = useState(false);
@@ -45,7 +47,8 @@ export default function Register() {
 	const [registeredUser, setRegisteredUser] = useState(null);
 
 	const handleChange = (e) => {
-		setData({ ...data, [e.target.name]: e.target.value });
+		const { name, value, type, checked } = e.target;
+		setData({ ...data, [name]: type === "checkbox" ? checked : value });
 		setSuccessMessage("");
 		setErrors({});
 	};
@@ -90,7 +93,7 @@ export default function Register() {
 
 			setSuccessMessage("Usuario registado exitosamente");
 			setRegisteredUser(apiResult.output);
-			setData({ username: "", email: "", password: "", confirm: "" });
+			setData({ username: "", email: "", password: "", confirm: "", terms: false });
 		} catch (error) {
 			setErrors({
 				submit: error.message || "Error al registrar usuario",
@@ -154,6 +157,21 @@ export default function Register() {
 			{errors.confirm && <p className="text-red-600 text-sm mt-1">{errors.confirm}</p>}
 		  </div>
   
+		  <div>
+			<label className="flex items-center gap-2">
+				<input
+					type="checkbox"
+					name="terms"
+					checked={data.terms}
+					onChange={handleChange}
+				/>
+				<span className={errors.terms ? "text-red-600" : ""}>Acepto términos</span>
+			</label>
+			{errors.terms && (
+				<p className="text-red-600 text-sm mt-1">{errors.terms}</p>
+			)}
+		  </div>
+
 		  {errors.submit && (
 			<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
 			  {errors.submit}
