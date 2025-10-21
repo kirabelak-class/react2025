@@ -4,9 +4,11 @@ import './App.css'
 // import FormValibot from './components/FormValibot'
 // import ProfileGet from './components/ProfileGet'
 // import Register from './components/Register'
-import LoginForm from './components/RegisterRHD'
+// import LoginForm from './components/RegisterRHD'
 // import FakeStore from './components/FakeStore'
 import Basic from './components/rhf/Basic'
+// import LoginForm from './components/rhf/LoginForm'
+import ProductVariants from './components/rhf/ProductVariants'
 function App() {
 
   return (
@@ -18,7 +20,9 @@ function App() {
      <Register/> */}
      {/* <LoginForm/> */}
      {/* <FakeStore/> */}
-     <Basic/>
+     {/* <Basic/> */}
+     {/* <LoginForm/> */}
+     <ProductVariants/>
     </>
   )
 }
