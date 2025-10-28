@@ -8,7 +8,8 @@ import './App.css'
 // import FakeStore from './components/FakeStore'
 import Basic from './components/rhf/Basic'
 // import LoginForm from './components/rhf/LoginForm'
-import ProductVariants from './components/rhf/ProductVariants'
+// import ProductVariants from './components/rhf/ProductVariants'
+import InvoiceForm from './components/rhf/InvoiceForm'
 function App() {
 
   return (
@@ -22,7 +23,8 @@ function App() {
      {/* <FakeStore/> */}
      {/* <Basic/> */}
      {/* <LoginForm/> */}
-     <ProductVariants/>
+     {/* <ProductVariants/> */}
+     <InvoiceForm/>
     </>
   )
 }
