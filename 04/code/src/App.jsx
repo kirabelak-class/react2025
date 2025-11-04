@@ -9,7 +9,9 @@ import './App.css'
 import Basic from './components/rhf/Basic'
 // import LoginForm from './components/rhf/LoginForm'
 // import ProductVariants from './components/rhf/ProductVariants'
-import InvoiceForm from './components/rhf/InvoiceForm'
+// import InvoiceForm from './components/rhf/InvoiceForm'
+// import RHFStoreCatalog from './components/rhf/Javi'
+import StoreCatalog from './components/pages/StoreCatalog'
 function App() {
 
   return (
@@ -24,7 +26,9 @@ function App() {
      {/* <Basic/> */}
      {/* <LoginForm/> */}
      {/* <ProductVariants/> */}
-     <InvoiceForm/>
+     {/* <InvoiceForm/> */}
+      {/* <RHFStoreCatalog/> */}
+      <StoreCatalog/>
     </>
   )
 }
