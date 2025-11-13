@@ -8,6 +8,12 @@ import Primer from "./components/Primer";
 import Interactivo from "./components/Interactivo";
 import AnimatedModal from "./components/AnimatedModal";
 import ExpandingCards from "./components/ExpandingCards";
+
+import SimpleLineChart from "./components/rechart/LineBasic";
+import BarExample from "./components/rechart/BarBasic";
+import PieExample from "./components/rechart/PieBasic";
+import SalesChart from "./components/rechart/SalesCharts";
+import CustomTooltipChart from "./components/rechart/CustomTooltipChart";
 function App() {
  
   return (
@@ -30,7 +36,17 @@ function App() {
 
 
       {/* motion + router dom */}
-      <AnimatedRoutes />
+      {/* <AnimatedRoutes /> */}
+
+      {/* Rechars */}
+      {/* <SimpleLineChart/> */}
+
+      {/* <PieExample/>
+      <BarExample/> */}
+
+      {/* <SalesChart/> */}
+      
+      {/* <CustomTooltipChart/> */}
     </main>
   );
 }
